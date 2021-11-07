@@ -3,8 +3,10 @@ const router = express.Router();
 
 const controller = require('../controller/controller');
 
-router.post('/', controller.create);
-router.delete('/:id', controller.delete);
-router.put('/:id', controller.update);
+router.post('/artista/', controller.criarArtista);
+router.delete('/artista/:id', controller.deletarArtista);
+router.put('/artista/:id', controller.alterarDadosArtista);
+router.get('/artista/', controller.buscarTodosOsArtistas);
+router.get('/artista/:id', controller.buscarUmArtistaPeloID);
 
 module.exports = router;
