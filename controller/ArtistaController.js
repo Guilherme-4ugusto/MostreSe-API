@@ -1,8 +1,9 @@
 const ArtistaModel = require('../model/ArtistaModel')
 
-class ArtistaController {
-    async criarArtista(req, res){
+class ArtistaController {  
+    async criarArtista(req, res){ 
         const artista = new ArtistaModel(req.body);
+        artista.foto_artista = req.file.filename;
         await artista
         .save()
         .then(response => {

@@ -13,7 +13,8 @@ const ArtistaSchema = new Schema({
     spty_artista: {type: String, require: false},
     twit_artista: {type: String, require: false},
     email: {type: String, require: false},
-    categoria_artista: {type: String, require: true}
+    categoria_artista: {type: String, require: true},
+    foto_artista: {type: String, require: false}
 });
 
 module.exports = mongoose.model('Artista', ArtistaSchema);
