@@ -1,11 +1,10 @@
-const ArtistaModel = require('../model/ArtistaModel')
+const ObraModel = require('../model/ObraModel')
 
-class ArtistaController {  
+class ObraController {  
 
     async inserir(req, res){ 
-        const artista = new ArtistaModel(req.body);
-        artista.foto_artista = req.file.filename;
-        await artista
+        const obra = new ObraModel(req.body);
+        await obra
         .save()
         .then(response => {
             return res.status(200).json(response);
@@ -16,7 +15,7 @@ class ArtistaController {
     }
 
     async deletar(req, res){
-        await ArtistaModel.deleteOne({'_id': req.params.id})
+        await ObraModel.deleteOne({'_id': req.params.id})
         .then(response =>{
             return res.status(200).json(response);
         })
@@ -26,7 +25,7 @@ class ArtistaController {
     }
 
     async atualizar(req, res){
-        await ArtistaModel.findByIdAndUpdate({'_id':req.params.id}, req.body, {new: true})
+        await ObraModel.findByIdAndUpdate({'_id':req.params.id}, req.body, {new: true})
         .then(response => {
             return res.status(200).json(response);
         })
@@ -36,7 +35,7 @@ class ArtistaController {
     }
 
     async obterTodos(req, res){
-        await ArtistaModel.find({})
+        await ObraModel.find({})
         .sort('when')
         .then(response =>{
             return res.status(200).json(response);
@@ -47,12 +46,12 @@ class ArtistaController {
     }
 
     async obterPorId(req, res){
-        await ArtistaModel.findById(req.params.id)
+        await ObraModel.findById(req.params.id)
         .then(response => {
             if(response)
              return res.status(200).json(response);
             else
-             return res.status(404).json({error: 'Artista não encontrado.'});
+             return res.status(404).json({error: 'Obra não encontrada.'});
         })
         .catch(error => {
            return res.status(500).json(error); 
@@ -62,4 +61,4 @@ class ArtistaController {
 
 }
 
-module.exports = new ArtistaController();
+module.exports = new ObraController();

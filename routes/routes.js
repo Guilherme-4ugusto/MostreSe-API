@@ -5,13 +5,20 @@ const storage = require('../model/UploadModel');
 
 const upload = multer({ storage });
 
-const controller = require('../controller/ArtistaController');
+const artistaController = require('../controller/ArtistaController');
+const obraController = require('../controller/ObraController');
 
-router.post('/artista/', upload.single('foto'), controller.criarArtista);
-router.delete('/artista/:id', controller.deletarArtista);
-router.put('/artista/:id', controller.alterarDadosArtista);
-router.get('/artista/', controller.buscarTodosOsArtistas);
-router.get('/artista/:id',  controller.buscarUmArtistaPeloID);
+router.post('/artista/', upload.single('foto'), artistaController.inserir);
+router.delete('/artista/:id', artistaController.deletar);
+router.put('/artista/:id', artistaController.atualizar);
+router.get('/artista/', artistaController.obterTodos);
+router.get('/artista/:id',  artistaController.obterPorId);
+
+router.post('/obra/', obraController.inserir);
+router.delete('/obra/:id', obraController.deletar);
+router.put('/obra/:id', obraController.atualizar);
+router.get('/obra/', obraController.obterTodos);
+router.get('/obra/:id',  obraController.obterPorId);
 
 
 
