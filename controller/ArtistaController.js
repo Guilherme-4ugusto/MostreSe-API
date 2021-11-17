@@ -4,7 +4,10 @@ class ArtistaController {
 
     async inserir(req, res){ 
         const artista = new ArtistaModel(req.body);
-        artista.foto_artista = req.file.filename;
+        artista.foto_artista = req.file.path;
+        if(req.file.path == null){
+            artista.foto_artista = req.file.location;
+        }
         await artista
         .save()
         .then(response => {

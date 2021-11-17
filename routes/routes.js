@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const storage = require('../model/UploadModel');
-
-const upload = multer({ storage });
+const upload = multer(require('../config/UploadConfig'));
 
 const artistaController = require('../controller/ArtistaController');
 const obraController = require('../controller/ObraController');
