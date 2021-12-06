@@ -1,7 +1,7 @@
 const AdminModel = require('../model/AdminModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../../config/auth.json');
+const authConfig = require('../config/auth.json');
 
 
 class AutenticacaoController {
