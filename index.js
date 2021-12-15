@@ -8,12 +8,12 @@ server.use(express.json());
 server.use(express.urlencoded({extended: true}));
 server.use(morgan('dev'));
 
-const routes_autenticacao = require('./src/routes/routes_autenticacao');
-const routes_artista = require('./src/routes/routes_artista');
-const routes_obra = require('./src/routes/routes_obra');
-server.use(routes_autenticacao);
-server.use(routes_artista);
-server.use(routes_obra);
+const autenticacaoRoutes = require('./src/routes/AutenticacaoRoutes');
+const artistaRoutes = require('./src/routes/ArtistaRoutes');
+const obraRoutes = require('./src/routes/ObraRoutes');
+server.use(autenticacaoRoutes);
+server.use(artistaRoutes);
+server.use(obraRoutes);
 
 server.listen(3000, () => {
     console.log('API ONLINE');

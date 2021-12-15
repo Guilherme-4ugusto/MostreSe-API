@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.json');
+
 
 const TokenValidation = async (req, res, next) =>{
     const authHeader = req.headers.autorizacao;  
@@ -10,7 +10,7 @@ const TokenValidation = async (req, res, next) =>{
     
     const parts = authHeader.split(' ');
 
-    if(!parts.lenght === 2){
+    if(!parts.length === 2){
         return res.status(401).send({error: 'Erro no token.'});
     }
 
@@ -20,7 +20,7 @@ const TokenValidation = async (req, res, next) =>{
        return res.status(401).send({error: 'Erro token mal formatado.'}) 
     }
 
-    jwt.verify(token, authConfig.secret, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if(err){ 
             return res.status(401).send({error: 'Token invalido'});
         }else{
