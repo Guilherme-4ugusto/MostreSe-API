@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const adminValidation = async (req, res, next) => {
 
-    const {name, email, password } = req.body;
+    const { name, email, password } = req.body;
     const isUpdate = req.params.id;
     if (!isUpdate) {
         if (!name) {

@@ -8,33 +8,39 @@ const artistModel = require("../model/ArtistModel");
 const workModel = require("../model/WorkModel");
 
 class AWSHandler {
-  
-  async artistHandler(req,res,next) {
-    let artist = await artistModel.findById(req.params.id);
-    if(!artist.aws_key) {
-      deleteImage(artist.aws_key);
+
+  async artistHandler(req, res, next) {
+    let exists = await artistModel.exists({ '_id': req.params.id });
+    if (exists) {
+      let artist = await artistModel.findById(req.params.id);
+      if (!artist.aws_key) {
+        deleteImage(artist.aws_key);
+      }
     }
     next();
   }
 
-  async workHandler(req,res,next) {
-    let work = await workModel.findById(req.params.id);
-    if(!work.aws_key) {
-      deleteMusic(work.aws_key);
+  async workHandler(req, res, next) {
+    let exists = await workModel.exists({ '_id': req.params.id });
+    if (exists) {
+      let work = await workModel.findById(req.params.id);
+      if (!work.aws_key) {
+        deleteMusic(work.aws_key);
+      }
     }
     next();
   }
 
 }
 
-module.exports = new AWSHandler();   
+module.exports = new AWSHandler();
 
 const deleteImage = async (key) => {
-  deleteByKey(key,"images");
+  deleteByKey(key, "images");
 }
 
 const deleteMusic = async (key) => {
-  deleteByKey(key,"music");
+  deleteByKey(key, "music");
 }
 
 const deleteByKey = async (key, localOfStorage) => {

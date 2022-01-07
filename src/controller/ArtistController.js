@@ -2,88 +2,88 @@ const ArtistModel = require('../model/ArtistModel')
 const categoryController = require('../controller/CategoryController');
 const Util = require('../util/Util')
 
-class ArtistController {  
+class ArtistController {
 
-    async insert(req, res){         
+    async insert(req, res) {
         await ArtistModel(req.body)
-        .save()
-        .then(response => {
-            ArtistModel.findByIdAndUpdate(response._id, 
-                { $push: { categories : req.params.id } },
-                { new: true, useFindAndModify: false }
+            .save()
+            .then(response => {
+                ArtistModel.findByIdAndUpdate(response._id,
+                    { $push: { categories: req.params.id } },
+                    { new: true, useFindAndModify: false }
                 ).then(
                 );
-            return res.status(200).json(response);
-        })
-        .catch(error => {
-            return res.status(500).json(error);
-        });
+                return res.status(200).json(response);
+            })
+            .catch(error => {
+                return res.status(500).json(error);
+            });
     }
 
     async validateCategory(req, res, next) {
         const categoryId = (req.params.id);
         if (!categoryId) {
             return res.status(500).json({ error: "Informe a categoria desse artista." });
-        }else if(!Util.isValidIdFormat(categoryId)){
-            return res.status(500).json({ error: "Formato de ID para busca inválido.." });
         } else if (!(await categoryController.checkIfExistsById(categoryId))) {
             return res.status(500).json({ error: "Categoria não encontrada." });
         }
         next();
     }
 
-    async delete(req, res){
-        await ArtistModel.deleteOne({'_id': req.params.id})
-        .then(response =>{
-            return res.status(200).json(response);
-        })
-        .catch(error => {
-            return res.status(500).json(error);
-        });
+    async delete(req, res) {
+        await ArtistModel.deleteOne({ '_id': req.params.id })
+            .then(response => {
+                return res.status(200).json(response);
+            })
+            .catch(error => {
+                return res.status(500).json(error);
+            });
     }
 
-    async update(req, res){
-        await ArtistModel.findByIdAndUpdate({'_id':req.params.id}, req.body, {new: true})
-        .then(response => {
-            return res.status(200).json(response);
-        })
-        .catch(error =>{
-            return res.status(500).json(error);
-        })
+    async update(req, res) {
+        await ArtistModel.findByIdAndUpdate({ '_id': req.params.id }, req.body, { new: true })
+            .then(response => {
+                return res.status(200).json(response);
+            })
+            .catch(error => {
+                return res.status(500).json(error);
+            })
     }
 
-    updateWork(req, res){
-       ArtistModel.findByIdAndUpdate(req.params.id, 
+    updateWork(req, res) {
+        ArtistModel.findByIdAndUpdate(req.params.id,
             { $push: { works: res._id } },
             { new: true, useFindAndModify: false }
-            ).then();
+        ).then();
     }
-    async findAll(req, res){
+
+    async findAll(req, res) {
         await ArtistModel.find({})
-        .sort('when')
-        .then(response =>{
-            return res.status(200).json(response);
-        })
-        .catch(error =>{
-            return res.status(500).json(error);
-        });
+            .sort('when')
+            .populate("categories")
+            .then(response => {
+                return res.status(200).json(response);
+            })
+            .catch(error => {
+                return res.status(500).json(error);
+            });
     }
 
-    async findById(req, res){
+    async findById(req, res) {
         await ArtistModel.findById(req.params.id).populate("categories")
-        .then(response => {
-        return res.status(200).json(response ? response : {error: 'Artista não encontrado.'});
-        })
-        .catch(error => {
-           return res.status(500).json(error); 
-        });
+            .then(response => {
+                return res.status(200).json(response ? response : { error: 'Artista não encontrado.' });
+            })
+            .catch(error => {
+                return res.status(500).json(error);
+            });
     }
 
-    async checkIfExistsById(id){
-        return await ArtistModel.exists({'_id' : id});
+    async checkIfExistsById(id) {
+        return await ArtistModel.exists({ '_id': id });
     }
 
-    async getWorkPopulate(req,res) {
+    async getWorkPopulate(req, res) {
         return res.status(200).json(await ArtistModel.findById(req.params.id).populate("works", '-artists').populate("categories"));
     }
 }

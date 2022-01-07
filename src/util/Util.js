@@ -1,3 +1,5 @@
+//Not using by now, keeping this for a while
+
 const mongoose = require('../config/Database');
 
 
@@ -9,3 +11,4 @@ const isValidIdFormat = (id) => {
 module.exports = {
     isValidIdFormat
 };
+

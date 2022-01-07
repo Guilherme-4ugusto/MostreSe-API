@@ -10,11 +10,10 @@ const workSchema = new Schema( {
  artists: [
      {
          type: Schema.Types.ObjectId,
-         ref: "artist",
+         ref: "dev_artist",
          required: true
      }
  ]
 });
 
-
-module.exports = mongoose.model('work', workSchema);
+module.exports = mongoose.model('dev_work', workSchema);

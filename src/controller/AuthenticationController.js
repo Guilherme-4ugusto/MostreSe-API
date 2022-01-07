@@ -17,20 +17,20 @@ class AuthenticationController {
     }
 
     async authenticate(req, res) {
-        const{email, password} = req.body;
+        const { email, password } = req.body;
         const admin = await AdminModel.findOne({ email }).select('+password');
-        if(!admin){
-            return res.status(400).send({error: 'Usuário não cadastrado.'});
-        }else if(!await bcrypt.compare(password, admin.password)){
-            return res.status(400).send({error: 'Senha inválida.'});
-        }else{
+        if (!admin) {
+            return res.status(400).send({ error: 'Usuário não cadastrado.' });
+        } else if (!await bcrypt.compare(password, admin.password)) {
+            return res.status(400).send({ error: 'Senha inválida.' });
+        } else {
             admin.password = undefined;
 
-            const token = jwt.sign({ id: admin.id}, process.env.JWT_SECRET, {
+            const token = jwt.sign({ id: admin.id }, process.env.JWT_SECRET, {
                 expiresIn: 86400,
             });
 
-            return res.status(200).send({admin, token}); 
+            return res.status(200).send({ admin, token });
         }
     }
 

@@ -9,20 +9,20 @@ class WorkController {
         await obra
             .save()
             .then(response => {
-                 WorkModel.findByIdAndUpdate(response._id, 
+                WorkModel.findByIdAndUpdate(response._id,
                     { $push: { artists: req.params.id } },
                     { new: true, useFindAndModify: false }
-                    ).then(
-                    );
-                   artistController.updateWork(req,res);
+                ).then(
+                );
+                artistController.updateWork(req, res);
                 return res.status(200).json(response);
             })
             .catch(error => {
                 return res.status(500).json(error);
-            });    
+            });
     }
 
-    async getWorkPopulate(req,res) {
+    async getWorkPopulate(req, res) {
         return res.status(200).json(await WorkModel.findById(req.params.id).populate("artists", '-works'));
     }
 
@@ -30,14 +30,12 @@ class WorkController {
         const artistId = (req.params.id);
         if (!artistId) {
             return res.status(500).json({ error: "Informe o artista dessa obra." });
-        }else if(!Util.isValidIdFormat(artistId)){
-            return res.status(500).json({ error: "Formato de ID para busca inválido.." });
         } else if (!(await artistController.checkIfExistsById(artistId))) {
             return res.status(500).json({ error: "Artista não encontrado." });
         }
         next();
     }
-    
+
 
     async delete(req, res) {
         await WorkModel.deleteOne({ '_id': req.params.id })
@@ -62,6 +60,7 @@ class WorkController {
     async findAll(req, res) {
         await WorkModel.find({})
             .sort('when')
+            .populate({path: 'artists', select:'-works', populate: { path: 'categories'}})
             .then(response => {
                 return res.status(200).json(response);
             })
@@ -72,6 +71,7 @@ class WorkController {
 
     async findById(req, res) {
         await WorkModel.findById(req.params.id)
+        .populate({path: 'artists', select:'-works', populate: { path: 'categories'}})
             .then(response => {
                 return res.status(200).json(response ? response : { error: 'Obra não encontrada.' });
             })
