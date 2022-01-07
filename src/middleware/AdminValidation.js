@@ -1,48 +1,35 @@
 const AdminModel = require('../model/AdminModel');
 const bcrypt = require('bcrypt');
 
-const AdminValidation = async (req, res, next) => {
+const adminValidation = async (req, res, next) => {
 
-    const {
-        nome,
-        email,
-        senha
-    } = req.body;
-
-    if (!nome)
-        return res.status(400).json({
-            error: 'nome é obrigatorio!'
-        });
-    else if (!email)
-        return res.status(400).json({
-            error: 'email é obrigatorio!'
-        });
-    else if (!senha)
-        return res.status(400).json({
-            error: 'senha é obrigatoria!'
-        });
-    else {
-        let existsEmail;
-
-        if (email) {
-            existsEmail = await AdminModel.findOne({
-                'email': {
-                    '$eq': email
-                }
-            });
+    const {name, email, password } = req.body;
+    const isUpdate = req.params.id;
+    if (!isUpdate) {
+        if (!name) {
+            return res.status(400).json({ error: 'nome é obrigatorio!' });
+        } else if (!email) {
+            return res.status(400).json({ error: 'email é obrigatorio!' });
+        } else if (!password) {
+            return res.status(400).json({ error: 'senha é obrigatoria!' });
         }
+    }
+    if (email) {
+        let existsEmail = await AdminModel.findOne({
+            'email': {
+                '$eq': email
+            }
+        });
 
         if (existsEmail) {
-            return res.status(400).json({
-                error: 'já existe um cadastro com esse email'
-            });
+            return res.status(400).json({ error: 'já existe um cadastro com esse email' });
         }
-
-        const hash = await bcrypt.hash(senha, 10);
-        req.body.senha = hash;
-
-        next();
     }
+
+    req.body.password = await bcrypt.hash(password, 10);;
+
+    next();
+
 }
 
-module.exports = AdminValidation;
+module.exports = adminValidation;

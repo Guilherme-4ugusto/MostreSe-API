@@ -1,10 +1,9 @@
-const ArtistaModel = require('../model/ArtistaModel')
+const CategoryModel = require('../model/CategoryModel')
 
-class ArtistaController {  
+class CategoryController {  
 
-    async inserir(req, res){  
-        const artista = new ArtistaModel(req.body);
-        await artista
+    async insert(req, res){         
+        await CategoryModel(req.body)
         .save()
         .then(response => {
             return res.status(200).json(response);
@@ -14,8 +13,8 @@ class ArtistaController {
         });
     }
 
-    async deletar(req, res){
-        await ArtistaModel.deleteOne({'_id': req.params.id})
+    async delete(req, res){
+        await CategoryModel.deleteOne({'_id': req.params.id})
         .then(response =>{
             return res.status(200).json(response);
         })
@@ -24,8 +23,8 @@ class ArtistaController {
         });
     }
 
-    async atualizar(req, res){
-        await ArtistaModel.findByIdAndUpdate({'_id':req.params.id}, req.body, {new: true})
+    async update(req, res){
+        await CategoryModel.findByIdAndUpdate({'_id':req.params.id}, req.body, {new: true})
         .then(response => {
             return res.status(200).json(response);
         })
@@ -34,8 +33,8 @@ class ArtistaController {
         })
     }
 
-    async obterTodos(req, res){
-        await ArtistaModel.find({})
+    async findAll(req, res){
+        await CategoryModel.find({})
         .sort('when')
         .then(response =>{
             return res.status(200).json(response);
@@ -45,20 +44,20 @@ class ArtistaController {
         });
     }
 
-    async obterPorId(req, res){
-        await ArtistaModel.findById(req.params.id)
+    async findById(req, res){
+        await CategoryModel.findById(req.params.id)
         .then(response => {
-            if(response)
-             return res.status(200).json(response);
-            else
-             return res.status(404).json({error: 'Artista não encontrado.'});
+        return res.status(200).json(response ? response : {error: 'Categoria não encontrado.'});
         })
         .catch(error => {
            return res.status(500).json(error); 
         });
     }
 
+    async checkIfExistsById(id){
+        return await CategoryModel.exists({'_id' : id});
+    }
 
 }
 
-module.exports = new ArtistaController();
+module.exports = new CategoryController();

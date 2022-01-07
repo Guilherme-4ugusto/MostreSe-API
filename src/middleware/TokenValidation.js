@@ -1,33 +1,28 @@
 const jwt = require('jsonwebtoken');
 
+const tokenValidation = async (req, res, next) => {
 
-const TokenValidation = async (req, res, next) =>{
-    const authHeader = req.headers.autorizacao;  
-    
-    if(!authHeader){
-        return res.status(401).send({error: 'O token não foi informado.'});
-    }
-    
-    const parts = authHeader.split(' ');
+    const authToken = req.headers.autorizacao;
 
-    if(!parts.length === 2){
-        return res.status(401).send({error: 'Erro no token.'});
+    if (!authToken) {
+        return res.status(401).send({ error: 'O token não foi informado.' });
     }
 
+    const parts = authToken.split(' ');
     const [scheme, token] = parts;
 
-    if(!/^Bearer$/i.test(scheme)){
-       return res.status(401).send({error: 'Erro token mal formatado.'}) 
+    if (!parts.length > 1 || !/^Bearer$/i.test(scheme)) {
+        return res.status(401).send({ error: 'Formato inválido do token' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if(err){ 
-            return res.status(401).send({error: 'Token invalido'});
-        }else{
-            req.adminId = decoded.id; 
-            next();  
+        if (err) {
+            return res.status(401).send({ error: 'Token invalido' });
+        } else {
+            req.adminId = decoded.id;
+            next();
         }
     });
 }
 
-module.exports = TokenValidation;
+module.exports = tokenValidation;
