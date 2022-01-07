@@ -60,6 +60,7 @@ class ArtistController {
     async findAll(req, res) {
         await ArtistModel.find({})
             .sort('when')
+            .populate("works", '-artists')
             .populate("categories")
             .then(response => {
                 return res.status(200).json(response);
@@ -68,9 +69,8 @@ class ArtistController {
                 return res.status(500).json(error);
             });
     }
-
     async findById(req, res) {
-        await ArtistModel.findById(req.params.id).populate("categories")
+        await ArtistModel.findById(req.params.id).populate("works", '-artists').populate("categories")
             .then(response => {
                 return res.status(200).json(response ? response : { error: 'Artista não encontrado.' });
             })
@@ -83,9 +83,6 @@ class ArtistController {
         return await ArtistModel.exists({ '_id': id });
     }
 
-    async getWorkPopulate(req, res) {
-        return res.status(200).json(await ArtistModel.findById(req.params.id).populate("works", '-artists').populate("categories"));
-    }
 }
 
 module.exports = new ArtistController();

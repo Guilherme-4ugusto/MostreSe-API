@@ -14,6 +14,6 @@ router.post('/artista/:id', tokenValidation, objectIDValidation, upload.single('
 router.delete('/artista/:id', tokenValidation, objectIDValidation,  artistHandler, artistController.delete);
 router.put('/artista/:id', tokenValidation, objectIDValidation,  artistHandler, upload.single('link_aws_image'), artistController.update);
 router.get('/artista', artistController.findAll);
-router.get('/artista/:id', objectIDValidation, artistController.getWorkPopulate);
+router.get('/artista/:id', objectIDValidation, artistController.findById);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const WorkModel = require('../model/WorkModel')
+const ArtistModel = require('../model/ArtistModel')
 const artistController = require('../controller/ArtistController');
 const Util = require('../util/Util')
 
@@ -14,7 +15,12 @@ class WorkController {
                     { new: true, useFindAndModify: false }
                 ).then(
                 );
-                artistController.updateWork(req, res);
+                ArtistModel.findByIdAndUpdate(req.params.id,
+                    { $push: { works: response._id} },
+                    { new: true, useFindAndModify: false }
+                ).then(
+                );
+                
                 return res.status(200).json(response);
             })
             .catch(error => {
